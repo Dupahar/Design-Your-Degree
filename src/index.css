@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes glitch {
+  0% {
+    clip-path: polygon(0 2%, 100% 2%, 100% 5%, 0 5%);
+    transform: translate(2px);
+  }
+  20% {
+    clip-path: polygon(0 15%, 100% 15%, 100% 15%, 0 15%);
+    transform: translate(-2px);
+  }
+  40% {
+    clip-path: polygon(0 10%, 100% 10%, 100% 20%, 0 20%);
+    transform: translate(1px);
+  }
+  60% {
+    clip-path: polygon(0 1%, 100% 1%, 100% 2%, 0 2%);
+    transform: translate(-1px);
+  }
+  80% {
+    clip-path: polygon(0 33%, 100% 33%, 100% 33%, 0 33%);
+    transform: translate(0px);
+  }
+  100% {
+    clip-path: polygon(0 44%, 100% 44%, 100% 44%, 0 44%);
+    transform: translate(1px);
+  }
+}
+
+.glitch {
+  position: relative;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch::before {
+  left: 2px;
+  text-shadow: -2px 0 #ff00c1;
+  animation: glitch 0.3s infinite linear alternate-reverse;
+}
+
+.glitch::after {
+  left: -2px;
+  text-shadow: 2px 0 #00fff9;
+  animation: glitch 0.3s infinite linear alternate;
+}
+
+@keyframes neon-pulse {
+  0%, 100% {
+    opacity: 1;
+    text-shadow: 0 0 10px #00fff9, 0 0 20px #00fff9, 0 0 30px #00fff9;
+  }
+  50% {
+    opacity: 0.8;
+    text-shadow: 0 0 5px #00fff9, 0 0 10px #00fff9, 0 0 15px #00fff9;
+  }
+}
+
+.neon-text {
+  animation: neon-pulse 2s infinite;
+}
+
+.cyberpunk-border {
+  position: relative;
+  border: 2px solid transparent;
+  background: linear-gradient(45deg, #ffd700, #ffeb3b);
+  background-clip: padding-box;
+}
+
+.cyberpunk-border::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  bottom: -2px;
+  left: -2px;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(45deg, #ffd700, #ffeb3b);
+}
+
+.cyber-grid {
+  background-image: linear-gradient(0deg, transparent 24%, rgba(0, 255, 249, .05) 25%, rgba(0, 255, 249, .05) 26%, transparent 27%, transparent 74%, rgba(0, 255, 249, .05) 75%, rgba(0, 255, 249, .05) 76%, transparent 77%, transparent),
+    linear-gradient(90deg, transparent 24%, rgba(0, 255, 249, .05) 25%, rgba(0, 255, 249, .05) 26%, transparent 27%, transparent 74%, rgba(0, 255, 249, .05) 75%, rgba(0, 255, 249, .05) 76%, transparent 77%, transparent);
+  background-size: 50px 50px;
+}
