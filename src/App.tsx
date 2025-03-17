@@ -42,7 +42,7 @@ const optionDetails: any = {
   }
 };
 
-// PDF paths using relative URLs
+// PDF paths using relative URLs (ensure your files exist under public folder)
 const mockPdfs = {
   '2023-2027': {
     1: {
@@ -185,7 +185,7 @@ const WelcomeScreen = () => {
 
   return (
     <motion.div
-      className="fixed inset-0 z-50 bg-gradient-to-br from-[#070721] via-[#0a0a30] to-[#0c0c44] flex items-center justify-center overflow-hidden perspective-[1000px]"
+      className="fixed inset-0 z-50 bg-gradient-to-br from-[#070721] via-[#0a0a30] to-[#0c0c44] flex items-center justify-center overflow-hidden perspective-[1000px] px-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, transition: { duration: 0.5 } }}
@@ -218,7 +218,7 @@ const WelcomeScreen = () => {
         ))}
       </div>
       <div className="absolute inset-0 grid-pattern opacity-20"></div>
-      <div className="relative z-10 text-center">
+      <div className="relative z-10 text-center px-4">
         <motion.div
           className="w-32 h-32 mx-auto mb-8 relative"
           initial={{ rotateY: 0, scale: 0 }}
@@ -236,17 +236,17 @@ const WelcomeScreen = () => {
         </motion.div>
         
         <motion.h1
-          className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-6 perspective-[1000px]"
+          className="text-4xl sm:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-6"
           variants={textVariants}
           initial="hidden"
           animate={stage >= 1 ? "visible" : "hidden"}
         >
-          <div className="flex justify-center">
+          <div className="flex justify-center flex-wrap">
             {titleLetters.map((letter, index) => (
               <motion.span
                 key={index}
                 variants={letterVariants}
-                className={letter === " " ? "mr-4" : "inline-block"}
+                className={letter === " " ? "mr-2" : "inline-block"}
                 style={{ textShadow: "0 0 10px rgba(59, 130, 246, 0.7)" }}
               >
                 {letter}
@@ -256,7 +256,7 @@ const WelcomeScreen = () => {
         </motion.h1>
         
         <motion.p
-          className="text-white/80 text-xl"
+          className="text-white/80 text-base sm:text-xl"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0, textShadow: ["0 0 4px #fff", "0 0 8px #fff", "0 0 4px #fff"] }}
           transition={{ opacity: { delay: 2, duration: 1 }, y: { delay: 2, duration: 1 }, textShadow: { delay: 2.5, duration: 2, repeat: Infinity } }}
@@ -271,7 +271,7 @@ const WelcomeScreen = () => {
           transition={{ delay: 3, duration: 1 }}
         >
           <motion.button
-            className="px-8 py-3 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium relative overflow-hidden w-full max-w-xs mx-auto"
+            className="w-full max-w-xs mx-auto px-8 py-3 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium relative overflow-hidden"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
             animate={{ boxShadow: ["0 0 10px rgba(59, 130, 246, 0.5)", "0 0 20px rgba(59, 130, 246, 0.8)", "0 0 10px rgba(59, 130, 246, 0.5)"] }}
