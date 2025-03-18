@@ -2,6 +2,138 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GraduationCap, ArrowRight, Calendar, ChevronLeft, FileText, BookOpen } from 'lucide-react';
 
+type BatchType = '2023-2027' | '2024-2028' | null;
+type NavigationLevel = 'batch' | 'semester' | 'buttons' | 'pdf';
+
+interface NavigationState {
+  batch: BatchType;
+  semester: number | null;
+  buttonGroup: number | null;
+  level: NavigationLevel;
+}
+
+// Option details for each batch/semester/option
+const optionDetails: any = {
+  '2023-2027': {
+    1: {
+      1: { name: "Explore Your surroundings(Data)", color: "text-green-400" },
+      2: { name: "Mathematics without Phobia", color: "text-red-700" }
+    },
+    2: {
+      1: { name: "Art and aesthetics of designing", color: "text-violet-400" },
+      2: { name: "Coding through GPT4", color: "text-blue-400" },
+      3: { name: "Data Lens", color: "text-gray-400" },
+      4: { name: "Start Ups", color: "text-black" }
+    },
+    3: {
+      1: { name: "Art of Mathematical Modelling", color: "text-red-700" },
+      2: { name: "Social innovation and Economics", color: "text-black" },
+      3: { name: "Technologies of the future", color: "text-blue-400" },
+      4: { name: "Climate Change", color: "text-green-400" }
+    },
+    4: {} // Semester 4: Disabled (in progress)
+  },
+  '2024-2028': {
+    1: {
+      1: { name: "Explore Your Surroundings", color: "text-green-400" },
+      2: { name: "Maths IT Data", color: "text-red-400" }
+    },
+    2: {} // Semester 2: Disabled (in progress)
+  }
+};
+
+// PDF paths using relative URLs
+const mockPdfs = {
+  '2023-2027': {
+    1: {
+      1: [
+        "/pdfs/2023-2027/Semester 1/Explore your surroundings(Data)/EYS_Parth.pdf",
+        "/pdfs/2023-2027/Semester 1/Explore your surroundings(Data)/EYS_Vegetable Vendors.pdf",
+        "/pdfs/2023-2027/Semester 1/Explore your surroundings(Data)/EYS_Virasat.pdf",
+        "/pdfs/2023-2027/Semester 1/Explore your surroundings(Data)/EYS_Warriors.pdf"
+      ],
+      2: [
+        "/pdfs/2023-2027/Semester 1/Mathematics without phobia(IT)/MID_News Vendor Problem.pdf",
+        "/pdfs/2023-2027/Semester 1/Mathematics without phobia(IT)/MID_RSA.pdf",
+        "/pdfs/2023-2027/Semester 1/Mathematics without phobia(IT)/MID_TSP.pdf",
+        "/pdfs/2023-2027/Semester 1/Mathematics without phobia(IT)/MID_Cantilever.pdf"
+      ]
+    },
+    2: {
+      1: [
+        "/pdfs/2023-2027/Semester 2/Art and Aesthetic of Designing/AAD_Library.pdf",
+        "/pdfs/2023-2027/Semester 2/Art and Aesthetic of Designing/AAD_Remote Learning.pdf",
+        "/pdfs/2023-2027/Semester 2/Art and Aesthetic of Designing/AAD_Sustainable Packaging.pdf",
+        "/pdfs/2023-2027/Semester 2/Art and Aesthetic of Designing/AAD_Transport.pdf"
+      ],
+      2: [
+        "/pdfs/2023-2027/Semester 2/Coding through GPT4/CGPT_EEG Epileptic Seziure.pdf",
+        "/pdfs/2023-2027/Semester 2/Coding through GPT4/CGPT_Eeg2.pdf",
+        "/pdfs/2023-2027/Semester 2/Coding through GPT4/CGPT_Heart Disease.pdf",
+        "/pdfs/2023-2027/Semester 2/Coding through GPT4/CGPT_Stock Market.pdf",
+        "/pdfs/2023-2027/Semester 2/Coding through GPT4/CGPT_Weather Forecast.pdf"
+      ],
+      3: [
+        "/pdfs/2023-2027/Semester 2/Data Lens/DL_Street Vendors.pdf",
+        "/pdfs/2023-2027/Semester 2/Data Lens/DL_Tourism.pdf",
+        "/pdfs/2023-2027/Semester 2/Data Lens/DL_Vegetable Vendors.pdf",
+        "/pdfs/2023-2027/Semester 2/Data Lens/DL_Waste Management.pdf"
+      ],
+      4: [
+        "/pdfs/2023-2027/Semester 2/Start Ups/SU_Bliss Bazaar.pdf",
+        "/pdfs/2023-2027/Semester 2/Start Ups/SU_Prime Essentelle.pdf",
+        "/pdfs/2023-2027/Semester 2/Start Ups/SU_Universal Baazar.pdf",
+        "/pdfs/2023-2027/Semester 2/Start Ups/SU_Yolo.pdf",
+        "/pdfs/2023-2027/Semester 2/Start Ups/SU_Your Toy Story.pdf"
+      ]
+    },
+    3: {
+      1: [
+        "/pdfs/2023-2027/Semester 3/Art of Mathematical Modelling/AMM_Population Growth.pdf",
+        "/pdfs/2023-2027/Semester 3/Art of Mathematical Modelling/AMM_Salt Water.pdf",
+        "/pdfs/2023-2027/Semester 3/Art of Mathematical Modelling/AMM_Tank Drainage.pdf",
+        "/pdfs/2023-2027/Semester 3/Art of Mathematical Modelling/AMM_Word Facetious.pdf"
+      ],
+      2: [
+        "/pdfs/2023-2027/Semester 3/Social Innovation and Economics/SIE_Elderly Care.pdf",
+        "/pdfs/2023-2027/Semester 3/Social Innovation and Economics/SIE_Enviro.pdf",
+        "/pdfs/2023-2027/Semester 3/Social Innovation and Economics/SIE_Stray Care.pdf",
+        "/pdfs/2023-2027/Semester 3/Social Innovation and Economics/SIE_Yuva Van.pdf",
+        "/pdfs/2023-2027/Semester 3/Social Innovation and Economics/SIE_Digital Literacy.pdf"
+      ],
+      3: [
+        "/pdfs/2023-2027/Semester 3/Technologies of the future/TOF_AR VR.pdf",
+        "/pdfs/2023-2027/Semester 3/Technologies of the future/TOF_Cybersecurity.pdf",
+        "/pdfs/2023-2027/Semester 3/Technologies of the future/TOF_Drone.pdf",
+        "/pdfs/2023-2027/Semester 3/Technologies of the future/TOF_Iot.pdf"
+      ],
+      4: []
+    }
+  },
+  '2024-2028': {
+    1: {
+      1: [
+        "/pdfs/2024-2028/Semester1/Explore Your Surroundings/EYS_Gyaandeep.pdf",
+        "/pdfs/2024-2028/Semester1/Explore Your Surroundings/EYS_Ranbir Warriors.pdf",
+        "/pdfs/2024-2028/Semester1/Explore Your Surroundings/EYS_The Bright Sparks.pdf",
+        "/pdfs/2024-2028/Semester1/Explore Your Surroundings/EYS_The Koshurs.pdf",
+        "/pdfs/2024-2028/Semester1/Explore Your Surroundings/EYS_The Voyagers.pdf",
+        "/pdfs/2024-2028/Semester1/Explore Your Surroundings/EYS_Urban Jammu.pdf"
+      ],
+      2: [
+        "/pdfs/2024-2028/Semester1/Maths IT Data/MID_Aryabhatta.pdf",
+        "/pdfs/2024-2028/Semester1/Maths IT Data/MID_Euler.pdf",
+        "/pdfs/2024-2028/Semester1/Maths IT Data/MID_Hemachandra.pdf",
+        "/pdfs/2024-2028/Semester1/Maths IT Data/MID_Mahalnobis.pdf",
+        "/pdfs/2024-2028/Semester1/Maths IT Data/MID_Newton.pdf",
+        "/pdfs/2024-2028/Semester1/Maths IT Data/MID_Pascal.pdf",
+        "/pdfs/2024-2028/Semester1/Maths IT Data/MID_Ramanujan.pdf"
+      ]
+    },
+    2: {}
+  }
+};
+
 // ------------------- WELCOME SCREEN -------------------
 const WelcomeScreen = () => {
   const [stage, setStage] = useState(0);
@@ -22,9 +154,13 @@ const WelcomeScreen = () => {
     }
   };
 
-  // Each letter animates without rotateX
+  // Adjusted letter variants to reduce blur
   const letterVariants = {
-    hidden: { opacity: 0, y: 50, scale: 0.1 },
+    hidden: {
+      opacity: 0,
+      y: 20,         // reduced from 50
+      scale: 0.8     // increased from 0.1
+    },
     visible: {
       opacity: 1,
       y: 0,
@@ -37,7 +173,7 @@ const WelcomeScreen = () => {
     }
   };
 
-  // Particle generator
+  // Particle generator (unchanged)
   const generateParticles = (count: number) => {
     return Array.from({ length: count }).map((_, i) => ({
       id: i,
@@ -142,7 +278,7 @@ const WelcomeScreen = () => {
           </motion.div>
         </motion.div>
 
-        {/* Title (no rotateX) */}
+        {/* Title using new letter variants */}
         <motion.h1
           className="mb-6"
           variants={textVariants}
@@ -158,7 +294,11 @@ const WelcomeScreen = () => {
                   className="inline-block"
                   style={{
                     textShadow: "0 0 10px rgba(59, 130, 246, 0.7)",
-                    marginLeft: letter === " " ? "0.25rem" : "0"
+                    marginLeft: letter === " " ? "0.25rem" : "0",
+                    // Font smoothing & backfaceVisibility
+                    backfaceVisibility: "hidden",
+                    WebkitFontSmoothing: "antialiased",
+                    MozOsxFontSmoothing: "grayscale"
                   }}
                 >
                   {letter}
