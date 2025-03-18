@@ -218,9 +218,9 @@ const WelcomeScreen = () => {
         ))}
       </div>
       <div className="absolute inset-0 grid-pattern opacity-20"></div>
-      <div className="relative z-10 text-center px-4">
+      <div className="relative z-10 text-center px-4 max-w-sm mx-auto">
         <motion.div
-          className="w-32 h-32 mx-auto mb-8 relative"
+          className="w-24 h-24 sm:w-32 sm:h-32 mx-auto mb-6"
           initial={{ rotateY: 0, scale: 0 }}
           animate={{ rotateY: 360, scale: [0, 1.2, 1], opacity: [0, 1] }}
           transition={{ rotateY: { duration: 3, repeat: Infinity, ease: "linear" }, scale: { duration: 2, ease: "backOut" } }}
@@ -231,32 +231,34 @@ const WelcomeScreen = () => {
             animate={{ boxShadow: ["0 0 20px rgba(59, 130, 246, 0.5)", "0 0 40px rgba(59, 130, 246, 0.8)", "0 0 20px rgba(59, 130, 246, 0.5)"] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
-            <span className="text-2xl font-bold text-white">DYD</span>
+            <span className="text-xl sm:text-2xl font-bold text-white">DYD</span>
           </motion.div>
         </motion.div>
         
         <motion.h1
-          className="text-4xl sm:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-6"
+          className="mb-6"
           variants={textVariants}
           initial="hidden"
           animate={stage >= 1 ? "visible" : "hidden"}
         >
-          <div className="flex justify-center flex-wrap">
-            {titleLetters.map((letter, index) => (
-              <motion.span
-                key={index}
-                variants={letterVariants}
-                className={letter === " " ? "mr-2" : "inline-block"}
-                style={{ textShadow: "0 0 10px rgba(59, 130, 246, 0.7)" }}
-              >
-                {letter}
-              </motion.span>
-            ))}
+          <div className="text-center">
+            <div className="inline-block whitespace-nowrap text-3xl sm:text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+              {titleLetters.map((letter, index) => (
+                <motion.span
+                  key={index}
+                  variants={letterVariants}
+                  className="inline-block"
+                  style={{ textShadow: "0 0 10px rgba(59, 130, 246, 0.7)", marginLeft: letter === " " ? "0.25rem" : "0" }}
+                >
+                  {letter}
+                </motion.span>
+              ))}
+            </div>
           </div>
         </motion.h1>
         
         <motion.p
-          className="text-white/80 text-base sm:text-xl"
+          className="text-white/80 text-sm sm:text-base md:text-xl"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0, textShadow: ["0 0 4px #fff", "0 0 8px #fff", "0 0 4px #fff"] }}
           transition={{ opacity: { delay: 2, duration: 1 }, y: { delay: 2, duration: 1 }, textShadow: { delay: 2.5, duration: 2, repeat: Infinity } }}
@@ -265,7 +267,7 @@ const WelcomeScreen = () => {
         </motion.p>
         
         <motion.div
-          className="mt-12"
+          className="mt-8 sm:mt-12"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 3, duration: 1 }}
@@ -403,7 +405,7 @@ function AppContainer() {
                           <p className="text-white mb-4">
                             {batch === '2023-2027' ? 'Four Semesters' : 'Two Semesters'}
                           </p>
-                          <div className="flex items-center text-white group-hover:text-red-400">
+                          <div className="flex items-center text-gray-900 group-hover:text-red-400">
                             View Details <ArrowRight className="ml-2 h-4 w-4" />
                           </div>
                         </div>
@@ -418,7 +420,7 @@ function AppContainer() {
                 <motion.div key="semester" className="max-w-4xl mx-auto" {...transition}>
                   <h2 className="text-4xl font-bold mb-8 text-white">Select Semester</h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    {Array.from({ length: totalSemesters }).map((_, index) => (
+                    {Array.from({ length: nav.batch === '2023-2027' ? 4 : 2 }).map((_, index) => (
                       <motion.button
                         key={index}
                         onClick={() => {
